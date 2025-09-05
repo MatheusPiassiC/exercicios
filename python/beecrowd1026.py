@@ -1,28 +1,39 @@
 def verifica_vagoes(ordem_saida):
-    ordem_chegada = list()
-    for i in range(len(ordem_saida)):
-        ordem_chegada.append(i + 1)
-    aux = list()
-    while True:
-        if(ordem_chegada.index[0] == ordem_saida[0]): #chega um vagao na ordem em que devia sair
-            ordem_chegada.pop(0)
+    n = len(ordem_saida)
+    ordem_chegada = list(range(1, n + 1))  #trem vindo de A
+    pilha = []                             #estação (stack)
+    ordem_saida = ordem_saida.copy()       #para não destruir a lista original
+    
+    while ordem_chegada or pilha:
+        
+        if pilha and pilha[-1] == ordem_saida[0]: #se o topo da pilha é o próximo da saída, manda embora
+            pilha.pop()
             ordem_saida.pop(0)
-        elif(len(aux) > 0 and aux[len(aux) - 1] == ordem_saida[0]): #o trem que está na estação é o que deveria sair
-            ordem_saida.pop(0)
-            aux.pop(len(aux) - 1)
-        elif(ordem_chegada.index[0] != ordem_saida[0]): #chega um vagao diferente do que devia sair
-            aux.append(ordem_chegada.pop(0))
+        elif ordem_chegada:                       #se ainda tenho vagões chegando, empurra pra pilha
+            pilha.append(ordem_chegada.pop(0))
+        else:
+            break
+    
+    return len(ordem_saida) == 0
+
 
     
 
 loop1 = True
 while loop1:
     n = int(input())
-    if(n != 0):
-        vagoes = list()
-        while vagoes != [0]:
-            vagoes = list(map(int,input().split()))
-            print(vagoes)
-    else: 
+    if n == 0:  
         loop1 = False
+        break
+
+    while True:
+        vagoes = list(map(int, input().split()))
+        if vagoes == [0]:  
+            print()
+            break
+
+        if verifica_vagoes(vagoes):
+            print("Yes")
+        else:
+            print("No")
 
